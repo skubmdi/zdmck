@@ -1,0 +1,13 @@
+{
+  "name": "zmk-devcontainer",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "workspaceFolder": "/zmk-devcontainer",
+  "mounts": [
+    "source=zmk-devcontainer,target=/zmk-devcontainer,type=volume",
+    "source=${localWorkspaceFolder}/output,target=/zmk-devcontainer/output,type=bind",
+    "source=${localWorkspaceFolder}/justfile,target=/zmk-devcontainer/justfile,type=bind"
+  ],
+  "postCreateCommand": [ "bash", "-c", "[[ -d .west ]] || west init" ]
+}
