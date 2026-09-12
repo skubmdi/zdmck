@@ -31,7 +31,7 @@ ZMK（ZMK Firmware）のビルド環境をDockerおよびVS CodeのDevcontainer�
 
 > [!NOTE]
 > ビルドの設定情報には、ZMK公式の GitHub Actions ワークフローで使われる **`build.yaml`** の記述形式をそのまま使用します。<br>
-> 既存の ZMK 設定リポジトリにある `build.yaml` をそのまま流用・定義してビルドを実行できます。
+> 既存の ZMK 設定リポジトリにある `build.yaml` がある場合、基本的に追加の手順は必要ありません。
 
 > [!TIP]
 > **ディレクトリ構造の前提条件**
