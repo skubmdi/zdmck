@@ -21,13 +21,26 @@ ZMK（ZMK Firmware）のビルド環境をDockerおよびVS CodeのDevcontainer�
 > コンテナの再作成や削除によって変更内容が失われるのを防ぐため、ソースコードを修正した後は **VS CodeのGit拡張機能やターミナルでの `git` コマンドを使用し、必ずGitHubなどの外部リポジトリへコミット・プッシュ**することを推奨します。
 
 ## 使い方 (Usage)
-| ステップ | 操作内容 | 詳細 |
-| :--- | :--- | :--- |
-| 1. リポジトリの準備 | フォーク / クローン | 本リポジトリをローカルにクローンします。フォークは任意です。<br>`git clone https://github.com/skubmdi/zmk-devcontainer`<br>フォークする場合、git-submoduleによるリポジトリ群の管理が可能です。 |
-| 2. VS Codeで開く | 開く | クローンしたフォルダを VS Code で開きます。 |
-| 3. コンテナの起動 | Reopen in Container | ポップアップが表示されたら「Reopen in Container」を選択します。<br>※表示されない場合はコマンドパレット（`Ctrl+Shift+P` / `Cmd+Shift+P`）から **`Dev Containers: Reopen in Container`** を実行してください。 |
-| 4. ビルド対象のクローン | `just clone` コマンド実行 | コンテナ内のターミナルで `just clone <リポジトリ名>` を実行すると、コンテナ内のボリュームへリポジトリがクローンされます。 |
-| 5. 設定・ビルド | `just build` コマンド実行 | コンテナ内のターミナルで `just build <クローン済みのフォルダ名>` を実行すると、初期設定 (`west config` / `west update`) からビルドまでが自動で行われます。 |
+
+1. **リポジトリの準備**
+   - 本リポジトリをローカルにクローンします（フォークは任意）。
+     ```bash
+     git clone https://github.com/skubmdi/zmk-devcontainer
+     ```
+   - フォークする場合、git-submoduleによるリポジトリ群の管理が可能です。
+
+2. **VS Codeで開く**
+   - クローンしたフォルダを VS Code で開きます。
+
+3. **コンテナの起動**
+   - ポップアップが表示されたら「Reopen in Container」を選択します。
+   - ※表示されない場合はコマンドパレット（`Ctrl+Shift+P` / `Cmd+Shift+P`）から **`Dev Containers: Reopen in Container`** を実行してください。
+
+4. **ビルド対象のクローン**
+   - コンテナ内のターミナルで `git clone <リポジトリ名>` 等で、コンテナ内のボリュームへリポジトリをクローンします。
+
+5. **設定・ビルド**
+   - コンテナ内のターミナルで `just build <フォルダ名>` を実行すると、初期設定 (`west config` / `west update`) からビルドまでが自動で行われます。
 
 > [!NOTE]
 > ビルドの設定情報には、ZMK公式の GitHub Actions ワークフローで使われる **`build.yaml`** の記述形式をそのまま使用します。<br>
@@ -61,17 +74,6 @@ ZMK（ZMK Firmware）のビルド環境をDockerおよびVS CodeのDevcontainer�
 ## ビルドの動作仕様
 * **クリーンビルド:** ビルドの実行ごとに過去のビルド結果やキャッシュを破棄し、常にクリーンな状態から再構築を行います。
 * **並列実行:** `build.yaml` 内の `include` に定義されたすべてのターゲット構成（`board` と `shield` の組み合わせ）を並行して同時にビルドします。
-```yaml
-include:
-  - board: ble_micro_pro
-    shield: corne_left
-    snippet: studio-rpc-usb-uart
-  - board: ble_micro_pro
-    shield: corne_right
-    snippet: studio-rpc-usb-uart
-  - board: ble_micro_pro
-    shield: settings_reset
-```
 
 ## 成果物の出力先
 ビルドが完了した成果物（`.uf2` / `.bin` ファイル、ログ、Devicetree構成等）は、すべてホスト（ローカル）環境へバインドマウントされた **`output/` フォルダ配下に自動で出力**されます。
