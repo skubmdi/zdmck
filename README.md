@@ -1,9 +1,9 @@
 # ZMK Firmware Devcontainer
-ZMK（ZMK Firmware）のビルド環境をDockerおよびVS CodeのDevcontainerで構築するためのテンプレートです。<br>
-ローカル環境を汚すことなく、VS Code上で簡単にファームウェアのビルドや編集が行えます。
+ZMK（ZMK Firmware）のビルド環境をDockerおよびVS CodeのDevcontainerで構築するための資材です。<br>
+ローカル環境を汚すことなく、ローカルのVS Code上で簡単かつ高速にファームウェアのビルドや編集が行えます。
 
 ## 開発環境の要件 (Prerequisites)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (または Docker Engine)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (または任意のDocker Engine)
 - [Visual Studio Code](https://code.visualstudio.com/)
 - VS Code 拡張機能: [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
@@ -16,7 +16,7 @@ ZMK（ZMK Firmware）のビルド環境をDockerおよびVS CodeのDevcontainer�
 > [!WARNING]
 > **変更内容の保存とバージョン管理について**
 > 
-> キーマップや設定ファイルなどの修正内容は、Docker内の**名前付きボリューム（Named Volume）内に保存**されます。
+> キーマップや設定ファイルなどの修正内容は、Docker内の**名前付きボリューム（Named Volume）内に保存**され、ローカルのファイルブラウザからは閲覧できません。
 > 
 > コンテナの再作成や削除によって変更内容が失われるのを防ぐため、ソースコードを修正した後は **VS CodeのGit拡張機能やターミナルでの `git` コマンドを使用し、必ずGitHubなどの外部リポジトリへコミット・プッシュ**することを推奨します。
 
@@ -36,7 +36,7 @@ ZMK（ZMK Firmware）のビルド環境をDockerおよびVS CodeのDevcontainer�
 > [!TIP]
 > **ディレクトリ構造の前提条件**
 > 
-> ビルド実行時は基本的に対象の**フォルダ名**（例: `just build <フォルダ名>` の `<フォルダ名>`）のみを指定します。<br>
+> ビルド実行時は基本的に対象の**フォルダ名**のみを指定します。<br>
 > この指定フォルダの直下に、以下のファイル群が存在している前提で処理が組まれています。
 >
 > - `build.yaml` （ビルド対象のマトリクス定義）
