@@ -1,0 +1,41 @@
+default:
+    @just --list
+
+config target config="config" west="west.yml":
+    #!/bin/bash
+    west config manifest.file {{ west }}
+    west config manifest.path {{ target }}/{{ config }}
+    west update && west zephyr-export
+
+build target config="config" west="west.yml" build="build.yaml" zephyr="zephyr/module.yml":
+    #!/bin/bash
+    [[ "$(west config manifest.file)" != "{{ west }}" ||
+       "$(west config manifest.path)" != "{{ target }}/{{ config }}"
+    ]] && just config "{{ target }}" "{{ config }}" "{{ west }}" || true
+
+    while IFS=$'\t' read board shield snippet aname cargs; do
+
+        [[ -z $board || -z $shield ]] && continue
+        name=${aname:-${shield:+$shield-}${board//\//_}-zmk}
+
+        [[ -e {{ target }}/{{ zephyr }} ]] \
+            && cargs="$cargs -DSHIELD="$shield" -DZMK_EXTRA_MODULES="$(pwd)/{{ target }}"" \
+            || cargs="$cargs -DSHIELD="$shield" -DZMK_CONFIG="$(pwd)/{{ target }}/{{ config }}""
+
+        (
+            echo build start $name
+            output=output/{{ target }}
+            build=.build/{{ target }}/$name
+
+            mkdir -p "$output"
+            west build -p always -d "$build" -s zmk/app -b "$board" ${snippet:+-S "$snippet"} -- $cargs &> "$output/$name.log"
+            [[ $? -eq 0 ]] && {
+                
+                echo build success $name
+                cat -s "$build/zephyr/zephyr.dts" &> "$output/$name.dts"
+                cat -s "$build/zephyr/zephyr.dts.pre" &> "$output/$name.dts.pre"
+                grep -v -e "^#" -e "^$" "$build/zephyr/.config" | sort &> "$output/$name.config"
+                for zmk in "$build/zephyr"/zmk.*; do cp "$zmk" "$output/$name${zmk##*/zmk}"; done
+            } || echo build faild $name
+        ) &
+    done < <(yq -r '.include[] | [.board, .shield, .snippet, ."artifact-name", ."cmake-args"] | @tsv' {{ target }}/{{ build }}); wait
