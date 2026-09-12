@@ -82,7 +82,7 @@ ZMK（ZMK Firmware）のビルド環境をDockerおよびVS CodeのDevcontainer�
 
 ## クローン・ビルド実行例 (Example)
 ```bash
-root@xxxxxxxxxxxx:/zmk-devcontainer# just clone https://github.com/skubmdi/zmk-config-corne
+root@xxxxxxxxxxxx:/zmk-devcontainer# git clone https://github.com/skubmdi/zmk-config-corne
     Cloning into 'zmk-config-corne'...
     remote: ~, done.
     Resolving ~, done.
