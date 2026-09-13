@@ -7,6 +7,23 @@ config target config="config" west="west.yml":
     west config manifest.path {{ target }}/{{ config }}
     west update && west zephyr-export
 
+draw target draw="draw.yaml" config="config" info="info.json" keymap="keymap.keymap":
+    #!/bin/bash
+    pipx install keymap-drawer
+
+    config="{{ target }}/{{ config }}"
+    output="output/{{ target }}"; mkdir -p "$output"
+
+    [[ -f "{{ draw }}" ]] && c="{{ draw }}"
+    [[ -f "$config/{{ info }}" ]] && j="$config/{{ info }}"
+    [[ -f "$config/{{ keymap }}" ]] && z="$config/{{ keymap }}"
+
+    [[ -z "$j" ]] && j="$(find "$config" -name '*.json' | head -1)"
+    [[ -z "$z" ]] && z="$(find "$config" -name '*.keymap' | head -1)"
+
+    /root/.local/bin/keymap ${c:+-c "$c"} parse ${z:+-z "$z"} > "$output"/keymap.yaml
+    /root/.local/bin/keymap ${c:+-c "$c"} draw "$output"/keymap.yaml ${j:+-j "$j"} > "$output"/keymap.svg
+
 build target config="config" west="west.yml" build="build.yaml" zephyr="zephyr/module.yml":
     #!/bin/bash
     [[ "$(west config manifest.file)" != "{{ west }}" ||

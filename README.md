@@ -11,7 +11,7 @@ ZMK（ZMK Firmware）のビルド環境をDockerおよびVS CodeのDevcontainer�
 > 上記要件に加え、開発スタイルや好みに合わせて**VS Codeの拡張機能を自由に追加・使用することが可能**です。
 > 
 > * **一時的な追加:** コンテナ起動後、拡張機能タブから任意の拡張機能を自由にインストールしてご利用いただけます。
-> * **永続的な共有:** フォーク先などで常に特定の拡張機能を自動反映したい場合は、`.devcontainer/devcontainer.json` 内の `customizations.vscode.extensions` 配下に拡張機能IDを追加してください。
+> * **永続的な共有:** フォーク先などで常に特定の拡張機能を自動反映したい場合は、`.devcontainer.json` 内の `customizations.vscode.extensions` 配下に拡張機能IDを追加してください。
 
 > [!WARNING]
 > **変更内容の保存とバージョン管理について**
@@ -61,14 +61,9 @@ ZMK（ZMK Firmware）のビルド環境をDockerおよびVS CodeのDevcontainer�
 > デフォルトの構成と異なる場合は、`just build` コマンドへ引数を渡すことで各設定ファイルのパスやファイル名を個別に変更可能です。
 >
 > ```bash
-> # 構文（デフォルト値）
 > just build <フォルダ名> \
 >   [config="config"] [west="west.yml"] \
 >   [build="build.yaml"] [zephyr="zephyr/module.yml"]
->
-> # 実行例: 独自のファイル名やサブフォルダを指定する場合
-> just build <フォルダ名> \
->   "custom_config" "custom_west.yml" "my_build.yaml" "custom_module"
 > ```
 
 ## ビルドの動作仕様
@@ -98,3 +93,28 @@ root@xxxxxxxxxxxx:/zmk-devcontainer# just build zmk-config-corne
     build success corne_right-ble_micro_pro-zmk
     build success corne_left-ble_micro_pro-zmk
 ```
+
+## キーマップ画像生成 (`just draw`)
+
+[caksoylar/keymap-drawer](https://github.com/caksoylar/keymap-drawer) を利用したキーマップの画像化（SVG生成）も `just draw` コマンドで実行可能です。
+
+```bash
+just draw <target> [draw="draw.yaml"] \
+    [config="config"] [info="info.json"] [keymap="keymap.keymap"]
+```
+
+上記デフォルト引数で動作させる場合、対象ターゲット直下のファイル構成は以下のようになっている必要があります。
+
+```text
+<target>/
+└── config/
+    ├── info.json       # レイアウト情報ファイル
+    └── keymap.keymap   # キーマップ設定ファイル
+draw.yaml               # (任意) keymap-drawerの描画設定ファイル
+```
+
+### 補足仕様
+
+* **設定ファイルの自動検知:** フォルダ内に `info.json` や `keymap.keymap` の名称で存在しない場合でも、`config/` フォルダ配下にある最初の `*.json` / `*.keymap` ファイルを自動検出して処理します。
+* **引数によるカスタマイズ:** 独自の設定ファイル名やパス構成を使用したい場合は、第2引数以降で個別パスを指定できます。
+* **成果物の出力:** 実行後、視覚化された `keymap.yaml` および `keymap.svg` が `output/<target>/` 配下に出力されます。
