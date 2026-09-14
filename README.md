@@ -97,6 +97,7 @@ root@xxxxxxxxxxxx:/zmk-devcontainer# just build zmk-config-corne
 ## キーマップ画像生成 (`just draw`)
 
 [caksoylar/keymap-drawer](https://github.com/caksoylar/keymap-drawer) を利用したキーマップの画像化（SVG生成）も `just draw` コマンドで実行可能です。
+以下コマンドにて、`keymap parse`および`keymap draw`までが実行されます。
 
 ```bash
 just draw <target> [draw="draw.yaml"] \
@@ -112,6 +113,8 @@ just draw <target> [draw="draw.yaml"] \
     └── keymap.keymap   # キーマップ設定ファイル
 draw.yaml               # (任意) keymap-drawerの描画設定ファイル
 ```
+> [!TIP]
+> keymap-drawerの描画設定については
 
 ### 補足仕様
 
