@@ -114,7 +114,7 @@ just draw <target> [draw="draw.yaml"] \
 draw.yaml               # (任意) keymap-drawerの描画設定ファイル
 ```
 > [!TIP]
-> keymap-drawerの描画設定については
+> keymap-drawerの描画設定については[公式ドキュメント](https://github.com/caksoylar/keymap-drawer/blob/main/CONFIGURATION.md)を参照ください。
 
 ### 補足仕様
 
