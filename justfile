@@ -44,15 +44,13 @@ build target config="config" west="west.yml" build="build.yaml" zephyr="zephyr/m
             output=output/{{ target }}
             build=.build/{{ target }}/$name
 
-            mkdir -p "$output"
+            rm -rf "$output"; mkdir -p "$output"
             west build -p always -d "$build" -s zmk/app -b "$board" ${snippet:+-S "$snippet"} -- $cargs &> "$output/$name.log"
-            [[ $? -eq 0 ]] && {
+            [[ $? -eq 0 ]] && echo build success $name || echo build faild $name
                 
-                echo build success $name
-                cat -s "$build/zephyr/zephyr.dts" &> "$output/$name.dts"
-                cat -s "$build/zephyr/zephyr.dts.pre" &> "$output/$name.dts.pre"
-                grep -v -e "^#" -e "^$" "$build/zephyr/.config" | sort &> "$output/$name.config"
-                for zmk in "$build/zephyr"/zmk.*; do cp "$zmk" "$output/$name${zmk##*/zmk}"; done
-            } || echo build faild $name
+            cat -s "$build/zephyr/zephyr.dts" &> "$output/$name.dts"
+            cat -s "$build/zephyr/zephyr.dts.pre" &> "$output/$name.dts.pre"
+            grep -v -e "^#" -e "^$" "$build/zephyr/.config" | sort &> "$output/$name.config"
+            for zmk in "$build/zephyr"/zmk.*; do cp "$zmk" "$output/$name${zmk##*/zmk}"; done
         ) &
     done < <(yq -r '.include[] | [.board, .shield, .snippet, ."artifact-name", ."cmake-args"] | @tsv' {{ target }}/{{ build }}); wait
