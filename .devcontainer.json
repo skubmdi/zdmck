@@ -7,8 +7,8 @@
   "mounts": [
     "source=zdmck,target=/zdmck,type=volume",
     "source=${localWorkspaceFolder}/output,target=/zdmck/output,type=bind",
-    "source=${localWorkspaceFolder}/zdmck,target=/usr/local/bin/zdmck,type=bind",
-    "source=${localWorkspaceFolder}/justfile,target=/usr/share/justfile,type=bind"
+    "source=${localWorkspaceFolder}/usr/share/zdmck,target=/usr/share/zdmck,type=bind",
+    "source=${localWorkspaceFolder}/usr/local/bin/zdmck,target=/usr/local/bin/zdmck,type=bind"
   ],
   "postCreateCommand": [ "bash", "-c", "[[ -d .west ]] || west init" ]
 }

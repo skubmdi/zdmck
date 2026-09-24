@@ -1,3 +1,0 @@
-#!/bin/bash
-
-exec just -d . -f /usr/share/justfile "$@"
