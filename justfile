@@ -1,5 +1,5 @@
 default:
-    @just --list
+    @zdmck --list
 
 config target config="config" west="west.yml":
     #!/bin/bash
@@ -28,7 +28,7 @@ build target config="config" west="west.yml" build="build.yaml" zephyr="zephyr/m
     #!/bin/bash
     [[ "$(west config manifest.file)" != "{{ west }}" ||
        "$(west config manifest.path)" != "{{ target }}/{{ config }}"
-    ]] && just config "{{ target }}" "{{ config }}" "{{ west }}" || true
+    ]] && zdmck config "{{ target }}" "{{ config }}" "{{ west }}" || true
 
     while IFS=$'\t' read board shield snippet aname cargs; do
 

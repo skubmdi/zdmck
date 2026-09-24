@@ -40,10 +40,10 @@ ZMK（ZMK Firmware）のビルド環境をDockerおよびVS CodeのDevcontainer�
    - コンテナ内のターミナルで `git clone <リポジトリ名>` 等で、コンテナ内のボリュームへリポジトリをクローンします。
 
 5. **設定・ビルド**
-   - コンテナ内のターミナルで `just build <フォルダ名>` を実行すると、初期設定からビルドまでが自動で行われます。
+   - コンテナ内のターミナルで `zdmck build <フォルダ名>` を実行すると、初期設定からビルドまでが自動で行われます。
 
 6. **キーマップ描写**
-   - コンテナ内のターミナルで `just draw <フォルダ名>` を実行すると [caksoylar/keymap-drawer](https://github.com/caksoylar/keymap-drawer) によるkeymapコマンドが実行され、キーマップの画像ファイルを生成します。
+   - コンテナ内のターミナルで `zdmck draw <フォルダ名>` を実行すると [caksoylar/keymap-drawer](https://github.com/caksoylar/keymap-drawer) によるkeymapコマンドが実行され、キーマップの画像ファイルを生成します。
 
 > [!NOTE]
 > ビルドの設定情報には、ZMK公式の GitHub Actions ワークフローで使われる **`build.yaml`** の記述形式をそのまま使用します。<br>
@@ -64,9 +64,9 @@ ZMK（ZMK Firmware）のビルド環境をDockerおよびVS CodeのDevcontainer�
 > - `./<フォルダ名>/config/west.yml` （マニフェストファイル）
 > - `./<フォルダ名>/zephyr/module.yml` （ZMKモジュール定義 ※モジュールとしてビルドする場合）
 >
-> デフォルトの構成と異なる場合は、`just build` コマンドへ引数を渡すことで各設定ファイルのパスやファイル名を個別に変更可能です。
+> デフォルトの構成と異なる場合は、`zdmck build` コマンドへ引数を渡すことで各設定ファイルのパスやファイル名を個別に変更可能です。
 > ```bash
-> just build <フォルダ名> \
+> zdmck build <フォルダ名> \
 >   [config="config"] [west="west.yml"] \
 >   [build="build.yaml"] [zephyr="zephyr/module.yml"]
 > ```
@@ -87,15 +87,15 @@ ZMK（ZMK Firmware）のビルド環境をDockerおよびVS CodeのDevcontainer�
 > - `./<フォルダ名>/config/info.json` （レイアウト情報ファイル）
 > - `./<フォルダ名>/config/keymap.keymap` （キーマップ設定ファイル）
 >
-> デフォルトの構成と異なる場合は、`just draw` コマンドへ引数を渡すことで各設定ファイルのパスやファイル名を個別に変更可能です。
+> デフォルトの構成と異なる場合は、`zdmck draw` コマンドへ引数を渡すことで各設定ファイルのパスやファイル名を個別に変更可能です。
 > ```bash
-> just draw <target> [draw="draw.yaml"] \
+> zdmck draw <target> [draw="draw.yaml"] \
 >   [config="config"] [info="info.json"] [keymap="keymap.keymap"]
 > ```
 
 ## 実行例 (Example)
 ```bash
-root@xxxxxxxxxxxx:/zmk-devcontainer# just clone https://github.com/skubmdi/zmk-config-corne
+root@xxxxxxxxxxxx:/zmk-devcontainer# git clone https://github.com/skubmdi/zmk-config-corne
     Cloning into 'zmk-config-corne'...
     remote: ~, done.
     Resolving ~, done.
@@ -103,14 +103,14 @@ root@688aa6923fb5:/zmk-devcontainer# ls -l zmk-config-corne
 total 0
     drwxr-xr-x 1 root root xxx xxx xx xx:xx config
     -rw-r--r-- 1 root root xxx xxx xx xx:xx build.yaml
-root@xxxxxxxxxxxx:/zmk-devcontainer# just build zmk-config-corne
+root@xxxxxxxxxxxx:/zmk-devcontainer# zdmck build zmk-config-corne
     build start corne_left-ble_micro_pro-zmk
     build start corne_right-ble_micro_pro-zmk
     build start settings_reset-ble_micro_pro-zmk
     build success settings_reset-ble_micro_pro-zmk
     build success corne_right-ble_micro_pro-zmk
     build success corne_left-ble_micro_pro-zmk
-root@xxxxxxxxxxxx:/zmk-devcontainer# just draw zmk-config-corne
+root@xxxxxxxxxxxx:/zmk-devcontainer# zdmck draw zmk-config-corne
     ~
 root@688aa6923fb5:/zmk-devcontainer# ls -l output/zmk-config-corne
     -rw-r--r-- 1 root root xxxxxxx xxx xx xx:xx keymap.svg
