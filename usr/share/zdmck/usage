@@ -1,0 +1,16 @@
+USAGE:
+    zdmck <command> <target> [options]
+
+COMMANDS:
+    config <target> [config="config"] [west="west.yml"]
+        Configures the West workspace manifest path and file, fetches submodules 
+        via `west update`, and exports Zephyr CMake packages.
+
+    build <target> [config="config"] [west="west.yml"] [build="build.yaml"] [zephyr="zephyr/module.yml"]
+        Reads build matrices from <target>/<build>.yaml and builds ZMK firmware 
+        targets in parallel. Artifacts, logs, DTS, and configs are saved to 
+        output/<target>/.
+
+    draw <target> [draw="draw.yaml"] [config="config"] [info="info.json"] [keymap="keymap.keymap"]
+        Installs keymap-drawer and generates keymap representation files 
+        (keymap.yaml and keymap.svg) in output/<target>/.

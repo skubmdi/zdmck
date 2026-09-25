@@ -3,11 +3,12 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "workspaceFolder": "/zmk-devcontainer",
+  "workspaceFolder": "/zdmck",
   "mounts": [
-    "source=zmk-devcontainer,target=/zmk-devcontainer,type=volume",
-    "source=${localWorkspaceFolder}/output,target=/zmk-devcontainer/output,type=bind",
-    "source=${localWorkspaceFolder}/justfile,target=/zmk-devcontainer/justfile,type=bind"
+    "source=zdmck,target=/zdmck,type=volume",
+    "source=${localWorkspaceFolder}/output,target=/zdmck/output,type=bind",
+    "source=${localWorkspaceFolder}/usr/share/zdmck,target=/usr/share/zdmck,type=bind",
+    "source=${localWorkspaceFolder}/usr/local/bin/zdmck,target=/usr/local/bin/zdmck,type=bind"
   ],
   "postCreateCommand": [ "bash", "-c", "[[ -d .west ]] || west init" ]
 }

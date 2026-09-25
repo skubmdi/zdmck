@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec just -d . -f /usr/share/zdmck/justfile "$@"
