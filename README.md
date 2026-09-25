@@ -1,4 +1,4 @@
-# ZMK Firmware Devcontainer
+# zdmck - zmk firmware devcontainer
 ZMK（ZMK Firmware）のビルド環境をDockerおよびVS CodeのDevcontainerで構築するための資材です。<br>
 ローカル環境を汚すことなく、ローカルのVS Code上で簡単かつ高速にファームウェアのビルドや編集が行えます。
 
@@ -26,7 +26,7 @@ ZMK（ZMK Firmware）のビルド環境をDockerおよびVS CodeのDevcontainer�
 1. **リポジトリの準備**
    - 本リポジトリをローカルにクローンします。フォークは任意です。
      ```bash
-     git clone https://github.com/skubmdi/zmk-devcontainer
+     git clone https://github.com/skubmdi/zdmck
      ```
 
 2. **VS Codeで開く**
