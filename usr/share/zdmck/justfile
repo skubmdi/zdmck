@@ -28,7 +28,7 @@ build target config="config" west="west.yml" build="build.yaml" zephyr="zephyr/m
 
             rm -rf "$output/*"; mkdir -p "$output"
             cmd="west build -p always -d "$build" -s zmk/app -b "$board" ${snippet:+-S "$snippet"} -- $cargs"
-            echo [??] $cmd; eval $cmd &> "$output/$name.log"; echo [$?] $cmd
+            echo [\>] $cmd; eval $cmd &> "$output/$name.log"; echo [$?] $cmd
 
             cat -s "$build/zephyr/zephyr.dts" &> "$output/$name.dts"
             cat -s "$build/zephyr/zephyr.dts.pre" &> "$output/$name.dts.pre"
