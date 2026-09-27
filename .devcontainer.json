@@ -1,5 +1,5 @@
 {
-  "name": "zmk-devcontainer",
+  "name": "zdmck",
   "build": {
     "dockerfile": "Dockerfile"
   },

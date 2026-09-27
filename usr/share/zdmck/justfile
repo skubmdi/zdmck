@@ -20,17 +20,16 @@ build target config="config" west="west.yml" build="build.yaml" zephyr="zephyr/m
 
         [[ -e {{ target }}/{{ zephyr }} ]] \
             && cargs="$cargs -DSHIELD="$shield" -DZMK_EXTRA_MODULES="$(pwd)/{{ target }}"" \
-            || cargs="$cargs -DSHIELD="$shield" -DZMK_CONFIG="$(pwd)/{{ target }}/{{ config }}""
+             ; cargs="$cargs -DSHIELD="$shield" -DZMK_CONFIG="$(pwd)/{{ target }}/{{ config }}""
 
         (
-            echo build start $name
             output=output/{{ target }}
             build=.build/{{ target }}/$name
 
-            rm -rf "$output"; mkdir -p "$output"
-            west build -p always -d "$build" -s zmk/app -b "$board" ${snippet:+-S "$snippet"} -- $cargs &> "$output/$name.log"
-            [[ $? -eq 0 ]] && echo build success $name || echo build faild $name
-                
+            rm -rf "$output/*"; mkdir -p "$output"
+            cmd="west build -p always -d "$build" -s zmk/app -b "$board" ${snippet:+-S "$snippet"} -- $cargs"
+            echo [\>] $cmd; eval $cmd &> "$output/$name.log"; echo [$?] $cmd
+
             cat -s "$build/zephyr/zephyr.dts" &> "$output/$name.dts"
             cat -s "$build/zephyr/zephyr.dts.pre" &> "$output/$name.dts.pre"
             grep -v -e "^#" -e "^$" "$build/zephyr/.config" | sort &> "$output/$name.config"
