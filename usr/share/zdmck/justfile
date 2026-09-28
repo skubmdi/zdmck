@@ -27,8 +27,8 @@ build target config="config" west="west.yml" build="build.yaml" zephyr="zephyr/m
             build=.build/{{ target }}/$name
 
             rm -rf "$output/*"; mkdir -p "$output"
-            cmd="west build -p always -d "$build" -s zmk/app -b "$board" ${snippet:+-S "$snippet"} -- $cargs"
-            echo [\>] $cmd; eval $cmd &> "$output/$name.log"; echo [$?] $cmd
+            cmd="west build -p always -d "$build" -s zmk/app -b "$board" ${snippet:+-S "$snippet"} -- $cargs &> "$output/$name.log""
+            echo [\>] $cmd; eval $cmd; echo [$?] $cmd
 
             cat -s "$build/zephyr/zephyr.dts" &> "$output/$name.dts"
             cat -s "$build/zephyr/zephyr.dts.pre" &> "$output/$name.dts.pre"
@@ -51,5 +51,5 @@ draw target draw="draw.yaml" config="config" info="info.json" keymap="keymap.key
     [[ -z "$j" ]] && j="$(find "$config" -name '*.json' | head -1)"
     [[ -z "$z" ]] && z="$(find "$config" -name '*.keymap' | head -1)"
 
-    /root/.local/bin/keymap ${c:+-c "$c"} parse ${z:+-z "$z"} > "$output"/keymap.yaml
-    /root/.local/bin/keymap ${c:+-c "$c"} draw "$output"/keymap.yaml ${j:+-j "$j"} > "$output"/keymap.svg
+    cmd="/root/.local/bin/keymap ${c:+-c "$c"} parse ${z:+-z "$z"} > "$output"/keymap.yaml"; echo $cmd; eval $cmd
+    cmd="/root/.local/bin/keymap ${c:+-c "$c"} draw "$output"/keymap.yaml ${j:+-j "$j"} > "$output"/keymap.svg"; echo $cmd; eval $cmd
