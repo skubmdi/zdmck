@@ -13,7 +13,15 @@ build target config="config" west="west.yml" build="build.yaml" zephyr="zephyr/m
        "$(west config manifest.path)" != "{{ target }}/{{ config }}"
     ]] && zdmck config "{{ target }}" "{{ config }}" "{{ west }}" || true
 
-    while IFS=$'\t' read board shield snippet aname cargs; do
+    output=output/{{ target }}
+    mkdir -p "$output"
+    while read -r include; do
+
+        board=$(jq -r '.board // ""' <<< "$include")
+        shield=$(jq -r '.shield // ""' <<< "$include")
+        snippet=$(jq -r '.snippet // ""' <<< "$include")
+        cargs=$(jq -r '."cmake-args" // ""' <<< "$include")
+        aname=$(jq -r '."artifact-name" // ""' <<< "$include")
 
         [[ -z $board || -z $shield ]] && continue
         name=${aname:-${shield:+$shield-}${board//\//_}-zmk}
@@ -23,19 +31,16 @@ build target config="config" west="west.yml" build="build.yaml" zephyr="zephyr/m
              ; cargs="$cargs -DSHIELD="$shield" -DZMK_CONFIG="$(pwd)/{{ target }}/{{ config }}""
 
         (
-            output=output/{{ target }}
+            rm "$output/$name".*
             build=.build/{{ target }}/$name
-
-            rm -rf "$output/*"; mkdir -p "$output"
-            cmd="west build -p always -d "$build" -s zmk/app -b "$board" ${snippet:+-S "$snippet"} -- $cargs"
-            echo [\>] $cmd; eval $cmd &> "$output/$name.log"; echo [$?] $cmd
+            cmd="west build -p always -d "$build" -s zmk/app -b "$board" ${snippet:+-S "$snippet"} -- $cargs &> "$output/$name.log""; eval $cmd; echo [$?] $cmd
 
             cat -s "$build/zephyr/zephyr.dts" &> "$output/$name.dts"
             cat -s "$build/zephyr/zephyr.dts.pre" &> "$output/$name.dts.pre"
             grep -v -e "^#" -e "^$" "$build/zephyr/.config" | sort &> "$output/$name.config"
             for zmk in "$build/zephyr"/zmk.*; do cp "$zmk" "$output/$name${zmk##*/zmk}"; done
         ) &
-    done < <(yq -r '.include[] | [.board, .shield, .snippet, ."artifact-name", ."cmake-args"] | @tsv' {{ target }}/{{ build }}); wait
+    done < <(yq -c ".include[]" "{{ target }}/{{ build }}"); wait 
 
 draw target draw="draw.yaml" config="config" info="info.json" keymap="keymap.keymap":
     #!/bin/bash
@@ -51,5 +56,5 @@ draw target draw="draw.yaml" config="config" info="info.json" keymap="keymap.key
     [[ -z "$j" ]] && j="$(find "$config" -name '*.json' | head -1)"
     [[ -z "$z" ]] && z="$(find "$config" -name '*.keymap' | head -1)"
 
-    /root/.local/bin/keymap ${c:+-c "$c"} parse ${z:+-z "$z"} > "$output"/keymap.yaml
-    /root/.local/bin/keymap ${c:+-c "$c"} draw "$output"/keymap.yaml ${j:+-j "$j"} > "$output"/keymap.svg
+    cmd="/root/.local/bin/keymap ${c:+-c "$c"} parse ${z:+-z "$z"} > "$output"/keymap.yaml"; eval $cmd; echo $cmd
+    cmd="/root/.local/bin/keymap ${c:+-c "$c"} draw "$output"/keymap.yaml ${j:+-j "$j"} > "$output"/keymap.svg"; eval $cmd; echo $cmd
