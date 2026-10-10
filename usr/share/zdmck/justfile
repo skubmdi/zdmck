@@ -30,9 +30,11 @@ build target config="config" west="west.yml" build="build.yaml" zephyr="zephyr/m
         [[ -e {{ target }}/{{ zephyr }} ]] && cargs="$cargs -DZMK_EXTRA_MODULES=\"$(pwd)/{{ target }}\""
 
         (
-            rm "$output/$name".*
+            rm -rf "$output/$name".*
             build=.build/{{ target }}/$name
-            cmd="west build -p always -d \"$build\" -s zmk/app -b \"$board\" ${snippet:+-S \"$snippet\"} -- $cargs &> \"$output/$name.log\""; eval $cmd; echo [$?] $cmd
+            west_build="west build -p always -d \"$build\" -s zmk/app -b \"$board\" ${snippet:+-S \"$snippet\"} -- $cargs &> \"$output/$name.log\""
+            
+            eval $west_build; echo [$?] $west_build
 
             cat -s "$build/zephyr/zephyr.dts" &> "$output/$name.dts"
             cat -s "$build/zephyr/zephyr.dts.pre" &> "$output/$name.dts.pre"
@@ -55,5 +57,8 @@ draw target draw="draw.yaml" config="config" info="info.json" keymap="keymap.key
     [[ -z "$j" ]] && j="$(find "$config" -name '*.json' | head -1)"
     [[ -z "$z" ]] && z="$(find "$config" -name '*.keymap' | head -1)"
 
-    cmd="/root/.local/bin/keymap ${c:+-c \"$c\"} parse ${z:+-z \"$z\"} > \"$output\"/keymap.yaml"; eval $cmd; echo $cmd
-    cmd="/root/.local/bin/keymap ${c:+-c \"$c\"} draw \"$output\"/keymap.yaml ${j:+-j \"$j\"} > \"$output\"/keymap.svg"; eval $cmd; echo $cmd
+    keymap_parse="/root/.local/bin/keymap ${c:+-c \"$c\"} parse ${z:+-z \"$z\"} > \"$output\"/keymap.yaml"    
+    keymap_draw="/root/.local/bin/keymap ${c:+-c \"$c\"} draw \"$output\"/keymap.yaml ${j:+-j \"$j\"} > \"$output\"/keymap.svg"
+
+    eval $keymap_parse; echo [$?] $keymap_parse
+    eval $keymap_draw; echo [$?] $keymap_draw
